@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connecting to Server</title>
+  
+  <meta http-equiv="refresh" content="3;url=https://conjunction-graduated-example-harvard.trycloudflare.com">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212; /* Clean dark theme */
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    
+    .spinner {
+      border: 4px solid #333333;
+      border-top: 4px solid #00ff88; /* Cyber/Tech green accent */
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 25px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .title {
+      font-size: 1.5rem;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .subtitle {
+      color: #a0a0a0;
+      font-size: 0.95rem;
+      max-width: 80%;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="spinner"></div>
+  <h2 class="title">Establishing Connection...</h2>
+  <p class="subtitle">Locating the active server address. You will be redirected shortly.</p>
+
+  <script type="text/javascript">
+    // Update this URL with your latest Cloudflare Tunnel link
+    const targetUrl = 'https://conjunction-graduated-example-harvard.trycloudflare.com';
+    
+    // Redirects after 1.5 seconds for a smoother UX
+    setTimeout(() => {
+      window.location.replace(targetUrl);
+    }, 1500);
+  </script>
+  
+</body>
+</html>
