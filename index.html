@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Connecting to Server</title>
-  
-  <meta http-equiv="refresh" content="3;url=https://conjunction-graduated-example-harvard.trycloudflare.com">
+  <title>Server Status</title>
   
   <style>
     body {
@@ -20,6 +18,7 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
+      transition: all 0.3s ease;
     }
     
     .spinner {
@@ -50,22 +49,72 @@
       max-width: 80%;
       line-height: 1.5;
     }
+
+    /* Offline UI State */
+    .offline-mode .spinner {
+      display: none;
+    }
+    
+    .offline-mode .title {
+      color: #ff4a4a; /* Red alert color for offline state */
+    }
   </style>
 </head>
 <body>
 
-  <div class="spinner"></div>
-  <h2 class="title">Establishing Connection...</h2>
-  <p class="subtitle">Locating the active server address. You will be redirected shortly.</p>
+  <div id="ui-container">
+    <div class="spinner" id="loading-spinner"></div>
+    <h2 class="title" id="status-title">Establishing Connection...</h2>
+    <p class="subtitle" id="status-subtitle">Checking server availability. Please wait.</p>
+  </div>
 
   <script type="text/javascript">
     // Update this URL with your latest Cloudflare Tunnel link
     const targetUrl = 'https://vessels-sign-seas-liability.trycloudflare.com';
     
-    // Redirects after 1.5 seconds for a smoother UX
-    setTimeout(() => {
-      window.location.replace(targetUrl);
-    }, 1500);
+    // We use a public static asset (like favicon) to bypass CORS issues when pinging
+    // Ensure your target server actually serves a file at this path.
+    const checkUrl = targetUrl + '/favicon.ico';
+
+    function setOfflineUI() {
+      document.body.classList.add('offline-mode');
+      document.getElementById('status-title').innerText = "The Web is Updating";
+      document.getElementById('status-subtitle').innerText = "The server is currently offline or being updated. Please check back later.";
+    }
+
+    function checkServerStatus() {
+      const img = new Image();
+      let hasResponded = false;
+
+      // If the image loads, the server is online and reachable
+      img.onload = function() {
+        if (hasResponded) return;
+        hasResponded = true;
+        window.location.replace(targetUrl);
+      };
+
+      // If the image fails to load, the server is down or returning a Cloudflare error page
+      img.onerror = function() {
+        if (hasResponded) return;
+        hasResponded = true;
+        setOfflineUI();
+      };
+
+      // Add a cache buster timestamp to prevent the browser from using a cached result
+      img.src = checkUrl + '?t=' + new Date().getTime();
+
+      // 5-second timeout fallback in case the connection hangs indefinitely
+      setTimeout(() => {
+        if (!hasResponded) {
+          hasResponded = true;
+          img.src = ""; // Abort image request
+          setOfflineUI();
+        }
+      }, 5000);
+    }
+
+    // Start the check
+    checkServerStatus();
   </script>
   
 </body>
